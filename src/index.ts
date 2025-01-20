@@ -5,6 +5,8 @@ const port = process.env.PORT || 3000;
 
 app.use(express.json());
 import { PrismaClient } from '@prisma/client';
+import { connect } from 'http2';
+import { disconnect } from 'process';
 const prisma = new PrismaClient();
 
 export default prisma;
@@ -20,17 +22,18 @@ app.use((req, res, next) => {
 
 // Renvoie les Pokémons inscrits
 app.get('/pokemons-cards', async (_req, res) => {
-  const pokecard = await prisma.pokemon.findMany({ include: { typeId: true } }); // Récupère tous les Pokémons et leurs type
+  const pokecard = await prisma.pokemonCard.findMany({ include: { typeIds: true } }); // Récupère tous les Pokémons et leurs type
   res.status(200).send(pokecard);
 });
 
 // Renvoie un pokémon en particulier
 app.get('/pokemons-cards/:pokemonCardId', async (req, res) => {
   try {
-    const pokecard = await prisma.pokemon.findUnique({
+    const pokecard = await prisma.pokemonCard.findUnique({
       where: {
         id: parseInt(req.params.pokemonCardId),
       },
+      include: { typeIds: true },
     });
     if (pokecard) { // On vérifie si il existe
       res.status(200).send(pokecard);
@@ -46,13 +49,13 @@ app.get('/pokemons-cards/:pokemonCardId', async (req, res) => {
 // Permet d'ajouter un pokémon à la liste
 app.post('/pokemon-cards', async (req, res) => {
 
-  const { name, pokedexId, type, lifePoints, size, weight, imageUrl } = req.body;
+  const { name, pokedexId, typeIds, lifePoints, size, weight, imageUrl } = req.body;
 
   // Batterie de tests pour voir si les champs sont bien remplis
   if (!name) {
     res.status(400).send({ error: 'Erreur 400 : Bad Request -  Le champ name est requis.' });
   }
-  const existingPokemon1 = await prisma.pokemon.findUnique({
+  const existingPokemon1 = await prisma.pokemonCard.findUnique({
     where: {
       name: name,
     },
@@ -65,7 +68,7 @@ app.post('/pokemon-cards', async (req, res) => {
   if (!pokedexId) {
     res.status(400).send({ error: 'Erreur 400 : Bad Request -  Le champ pokedexId est requis.' });
   }
-  const existingPokemon2 = await prisma.pokemon.findUnique({
+  const existingPokemon2 = await prisma.pokemonCard.findUnique({
     where: {
       pokedexId: pokedexId,
     },
@@ -74,18 +77,25 @@ app.post('/pokemon-cards', async (req, res) => {
   if (existingPokemon2) {
     res.status(400).send({ error: 'Erreur 400 : Bad Request -  Le numéro du Pokédex est déjà pris.' });
   }
-  if (!type) {
+  if (!typeIds) {
     res.status(400).send({ error: 'Erreur 400 : Bad Request -  Le champ type est requis.' });
   }
 
-  const validType = await prisma.type.findUnique({
+  const validType = await prisma.type.findMany({
     where: {
-      id: type,
+      id: {
+        in: typeIds,
+      },
     },
   });
 
+  if (validType.length !== typeIds.length) {
+    res.status(400).send({ error: 'Erreur 400 : Bad Request - Un ou plusieurs types sont invalides.' });
+    return;
+  }
+
   if (!validType) {
-    res.status(400).send({ error: 'Erreur 400 : Bad Request -  Le numéro du type est invalide.' });
+    res.status(400).send({ error: 'Erreur 400 : Bad Request -  Le champ typeIds est requis.' });
   }
   if (!lifePoints) {
     res.status(400).send({ error: 'Erreur 400 : Bad Request -  Le champ lifePoints est requis.' });
@@ -97,7 +107,7 @@ app.post('/pokemon-cards', async (req, res) => {
   const pokecard = {
     name,
     pokedexId,
-    type,
+    typeIds: { connect: typeIds.map((id: number) => ({ id })) },
     lifePoints,
     size,
     weight,
@@ -106,7 +116,7 @@ app.post('/pokemon-cards', async (req, res) => {
 
   try {
     // Pass 'pokecard' object into query
-    const createPokemon = await prisma.pokemon.create({ data: pokecard });
+    const createPokemon = await prisma.pokemonCard.create({ data: pokecard });
     res.status(201).send(`Ajout de la carte Pokémon ${createPokemon.name}`);
   } catch (error) {
     console.error(error);
@@ -118,9 +128,9 @@ app.post('/pokemon-cards', async (req, res) => {
 // Permet de mettre à jour un pokémon
 app.patch('/pokemon-cards/:pokemonCardId', async (req, res) => {
 
-  const { name, pokedexId, type, lifePoints, size, weight, imageUrl } = req.body;
+  const { name, pokedexId, typeIds, lifePoints, size, weight, imageUrl } = req.body;
 
-  const existingPokemon = await prisma.pokemon.findUnique({
+  const existingPokemon = await prisma.pokemonCard.findUnique({
       where: {
         id: parseInt(req.params.pokemonCardId),
       },
@@ -134,16 +144,19 @@ app.patch('/pokemon-cards/:pokemonCardId', async (req, res) => {
     res.status(400).send({ error: 'Erreur 400 : Bad Request -  Le nom du Pokémon est déjà pris.' });
   }
 
-  if (type) {
-    const validType = await prisma.type.findUnique({
+  if (typeIds) {
+      const validType = await prisma.type.findMany({
       where: {
-        id: type,
+        id: {
+          in: typeIds,
+        },
       },
-    });
-    if (!validType) {
-      res.status(400).send({ error: 'Erreur 400 : Bad Request -  Le numéro du type est invalide.' });
-      return;
-    }
+  });
+
+  if (validType.length !== typeIds.length) {
+    res.status(400).send({ error: 'Erreur 400 : Bad Request - Un ou plusieurs types sont invalides.' });
+    return;
+  }
   }
 
   if (lifePoints < 0) {
@@ -154,7 +167,8 @@ app.patch('/pokemon-cards/:pokemonCardId', async (req, res) => {
   const pokecard = {
     name,
     pokedexId,
-    type,
+    typeIds: {
+      set: typeIds.map((id: number) => ({ id })) },
     lifePoints,
     size,
     weight,
@@ -162,7 +176,7 @@ app.patch('/pokemon-cards/:pokemonCardId', async (req, res) => {
   };
 
   try {
-    const updatePokemon = await prisma.pokemon.update({
+    const updatePokemon = await prisma.pokemonCard.update({
       where: {
         id: parseInt(req.params.pokemonCardId),
       },
@@ -178,7 +192,7 @@ app.patch('/pokemon-cards/:pokemonCardId', async (req, res) => {
 // Permet de supprimer un pokémon
 app.delete('/pokemon-cards/:pokemonCardId', async (req, res) => {
   try {
-      const existingPokemon = await prisma.pokemon.findUnique({
+      const existingPokemon = await prisma.pokemonCard.findUnique({
         where: {
           id: parseInt(req.params.pokemonCardId),
         },
@@ -187,7 +201,7 @@ app.delete('/pokemon-cards/:pokemonCardId', async (req, res) => {
       if (!existingPokemon) {
         res.status(404).send({ error: 'Erreur 404 : Le Pokémon n"a pas été trouvé.' });
       }
-   const deletePokémon = await prisma.pokemon.delete({
+   const deletePokémon = await prisma.pokemonCard.delete({
      where: {
          id: parseInt(req.params.pokemonCardId),
        },
@@ -200,6 +214,17 @@ app.delete('/pokemon-cards/:pokemonCardId', async (req, res) => {
     res.status(500).send({ error: 'Erreur 500 : Une erreur interne s"est produite.' });
   }
 });
+
+// Permet de créer un utlisateur
+app.post('/users', async (req, res) => {
+
+})
+
+// Permet de se connecter à l'application
+app.post('/users/login', async (req, res) => {
+  
+})
+
 
 
 export function stopServer() {
