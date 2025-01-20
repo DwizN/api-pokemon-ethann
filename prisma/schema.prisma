@@ -10,4 +10,18 @@ datasource db {
 model Type {
   id   Int    @id @default(autoincrement())
   name String @unique
+
+  Pokemon Pokemon[] // Relation avec la table Pokémon
+}
+
+model Pokemon {
+  id Int @id @default(autoincrement()) // Identifiant unique de la carte
+  name String @unique // Nom du Pokémon
+  pokedexId Int @unique // Identifiant du pokémon dans le pokédex
+  type Int 
+  typeId   Type @relation(fields: [type], references: [id]) // Type du Pokémon (relation 1-N)
+  lifePoints Int // Points de vie
+  size Float? // Taille
+  weight Float? // Poids
+  imageUrl String? // Url de l'image du Pokémon
 }
