@@ -8,7 +8,7 @@ const prisma = new PrismaClient();
 export const verifyPokemonCardbyId = async (pokemonCardId: number, res : Response, next: NextFunction) => {
     const pokemonCard = await prisma.pokemonCard.findUnique({
         where: {
-            id: pokemonCardId,
+            id: parseInt(pokemonCardId.toString()),
         },
     });
     if (!pokemonCard) {

@@ -11,7 +11,7 @@ export const createUser = async (req: any, res: any) => {
     const { email, password } = req.body;
     
     if (!email) {
-        return res.status(400).send({ error: 'Erreur 400 Bad Request :  Le champ user est requis.' });
+        return res.status(400).send({ error: 'Erreur 400 Bad Request :  Le champ email est requis.' });
     }
     
     if (!password) {
@@ -21,17 +21,12 @@ export const createUser = async (req: any, res: any) => {
     await verifyexistingUser(req, res, () => {}); // On vérifie si l'utilisateur existe
     if (res.statusCode === 400) {
         return res;
-    } else {
-        res.status(200).send(req.user);
     }
     
     // Hashage du mot de passe
-    const hashedPassword = hashPassword(password);
+    const hashedPassword = await hashPassword(password);
     
-    const user = transformUserData(req, hashedPassword);
-    if (typeof user === 'object') {
-        return res.status(500).send({ error: 'Erreur 500 : Une erreur interne s"est produite.' });
-    }
+    const user = await transformUserData(req, hashedPassword);
     
     try {
         const createUser = await prisma.user.create({ data: user });
@@ -47,7 +42,7 @@ export const loginUser = async (req: any, res: any) => {
     const {email, password} = req.body;
 
   if (!email) {
-    return res.status(400).send({ error: 'Erreur 400 Bad Request :  Le champ user est requis.' });
+    return res.status(400).send({ error: 'Erreur 400 Bad Request :  Le champ email est requis.' });
   }
 
   if (!password) {

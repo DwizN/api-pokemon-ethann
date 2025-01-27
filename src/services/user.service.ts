@@ -74,7 +74,7 @@ export const hashPassword = async(password: string) => {
 // Transforme les données de l'utilisateur pour renvoyer un objet
 // Oui mettre "any" c'est pas bien mais son type c'est littéralement Promise<any>
 export const transformUserData = async(req : Request, hashedPassword: any) => {
-  const { email, password } = req.body;
+  const { email } = req.body;
   
   const user = {
     email: email,

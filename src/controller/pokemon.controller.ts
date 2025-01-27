@@ -9,11 +9,16 @@ export const getAllPokemonCards = async (_req: any, res: any) => {
 
 export const getOnePokemonCard = async (req: any, res: any) => {
     try {
-        await verifyPokemonCardbyId(req.params.id, res, () => {}); // On vérifie si le Pokémon existe
+        await verifyPokemonCardbyId(req.params.pokemonCardId, res, () => {}); // On vérifie si le Pokémon existe
         if (res.statusCode === 404) {
           return res;
         } else {
-          res.status(200).send(req.pokemonCard);
+          const pokemoncard = await prisma.pokemonCard.findUnique({
+            where: {
+              id: parseInt(req.params.pokemonCardId),
+            },
+          });
+          return res.status(200).send(pokemoncard);
         }
       } catch (error) {
         console.error(error);
