@@ -79,6 +79,6 @@ export const loginUser = async (req: any, res: any) => {
   );
 
 
-  res.status(201).send(`Bienvenue ${email} !`);
+  res.status(201).json({ message: `Bienvenue ${email} !`, token });
 
 };

@@ -8,17 +8,21 @@ export const verifyJWT = (req: Request, res: Response, next: NextFunction) => {
   const authHeader = req.headers.authorization;
   if (authHeader) {
     const token = authHeader.split(' ')[1]; // On récupère le token
-    const decodedToken = jwt.verify(
-      token,
-      process.env.JWT_SECRET as jwt.Secret
-    ) as {
-      email: string;
-    };
-    const email = decodedToken.email;
-    req.query = {
-      email: email,
-    };
-    next();
+    try {
+      const decodedToken = jwt.verify(
+        token,
+        process.env.JWT_SECRET as jwt.Secret
+      ) as {
+        email: string;
+      };
+      const email = decodedToken.email;
+      req.query = {
+        email: email,
+      };
+      next();
+    } catch (err) {
+      res.sendStatus(403); // Token invalide
+    }
   } else {
     res.sendStatus(401); // Pas de token fourni
   }
