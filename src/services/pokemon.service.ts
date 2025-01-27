@@ -5,13 +5,13 @@ const prisma = new PrismaClient();
 
 // Vérifie si le Pokémon existe par les différents champs pour éviter les doublons
 
-export const verifyPokemonCardbyId = async (req: Request, res: Response, next: NextFunction) => {
+export const verifyPokemonCardbyId = async (pokemonCardId: number, res : Response, next: NextFunction) => {
     const pokemonCard = await prisma.pokemonCard.findUnique({
         where: {
-            id: parseInt(req.params.pokemonCardId),
+            id: pokemonCardId,
         },
     });
-    if (pokemonCard) {
+    if (!pokemonCard) {
         return res.status(404).send({ error: 'Erreur 404 : Le Pokémon n"a pas été trouvé.' });
     } else {
         next();

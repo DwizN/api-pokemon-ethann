@@ -9,7 +9,7 @@ export const getAllPokemonCards = async (_req: any, res: any) => {
 
 export const getOnePokemonCard = async (req: any, res: any) => {
     try {
-        await verifyPokemonCardbyId(req, res, () => {}); // On vérifie si le Pokémon existe
+        await verifyPokemonCardbyId(req.params.id, res, () => {}); // On vérifie si le Pokémon existe
         if (res.statusCode === 404) {
           return res;
         } else {
@@ -86,7 +86,7 @@ export const createPokemonCard = async (req: any, res: any) => {
 
 export const updatePokemonCard = async (req: any, res: any) => {
     
-    await verifyPokemonCardbyId(req, res, () => {}); // On vérifie si le Pokémon existe
+    await verifyPokemonCardbyId(parseInt(req.params.pokemonCardId), res, () => {}); // On vérifie si le Pokémon existe
     if (res.statusCode === 404) {
       return res;
     }
@@ -127,7 +127,7 @@ export const updatePokemonCard = async (req: any, res: any) => {
 
 export const deletePokemonCard = async (req: any, res: any) => {
     try {
-        await verifyPokemonCardbyId(req, res, () => {}); // On vérifie si le Pokémon existe
+        await verifyPokemonCardbyId(parseInt(req.params.pokemonCardId), res, () => {}); // On vérifie si le Pokémon existe
         if (res.statusCode === 404) {
           return res;
         }
