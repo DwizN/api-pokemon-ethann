@@ -1,0 +1,209 @@
+openapi: 3.0.0
+info:
+  title: Pokémon Card API
+  version: 1.0.0
+  description: API pour recevoir et gérer les cartes Pokémon
+servers:
+  - url: http://localhost:3000
+    description: Serveur local
+paths:
+  /pokemons-cards:
+    get:
+      summary: Obtenir la liste des cartes Pokémon
+      responses:
+        '200':
+          description: Liste des cartes Pokémon
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PokemonCard'
+  /pokemons-cards/{id}:
+    get:
+      summary: Obtenir une carte Pokémon
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID de la carte Pokémon
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Carte Pokémon
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PokemonCard'
+        '404':
+          description: Carte Pokémon non trouvée
+        '500':
+          description: Erreur serveur
+  /pokemon-cards:
+    post:
+      summary: Ajouter une carte Pokémon (requiert un token)
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PokemonCard'
+      responses:
+        '201':
+          description: Carte Pokémon ajoutée
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PokemonCard'
+        '400':
+          description: Requête invalide
+        '500':
+          description: Erreur serveur
+  /pokemon-cards/{id}:
+    patch:
+      summary: Modifier une carte Pokémon (requiert un token)
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID de la carte Pokémon
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PokemonCard'
+      responses:
+        '200':
+          description: Carte Pokémon modifiée
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PokemonCard'
+        '400':
+          description: Requête invalide
+        '404':
+          description: Carte Pokémon non trouvée
+        '500':
+          description: Erreur serveur
+    delete:
+      summary: Supprimer une carte Pokémon (requiert un token)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID de la carte Pokémon
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Carte Pokémon supprimée
+        '404':
+          description: Carte Pokémon non trouvée
+        '500':
+          description: Erreur serveur
+  /users:
+    post:
+      summary: Créer un utilisateur
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '201':
+          description: Utilisateur créé
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Requête invalide
+        '500':
+          description: Erreur serveur
+  /users/login:
+    post:
+      summary: Se connecter/renvoie un token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Login'
+      responses:
+        '200':
+          description: Connexion réussie
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+        '400':
+          description: Requête invalide
+        '401':
+          description: Connexion échouée
+        '500':
+          description: Erreur serveur
+components:
+  schemas:
+    Type:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+    PokemonCard:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        pokedexId:
+          type: integer
+        typeIds:
+          type: array
+          items:
+            $ref: '#/components/schemas/Type'
+        lifePoints:
+          type: integer
+        size:
+          type: number
+          format: float
+        weight:
+          type: number
+          format: float
+        imageUrl:
+          type: string
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        email:
+          type: string
+        password:
+          type: string
+    Login:
+      type: object
+      properties:
+        token:
+          type: string
+        message:
+          type: string
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

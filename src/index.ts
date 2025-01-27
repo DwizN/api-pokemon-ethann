@@ -1,6 +1,8 @@
 import express from 'express';
+import swaggerUi from 'swagger-ui-express';
 import { pokemonRoutes } from './route/pokemon.route';
 import { userRoutes } from './route/user.route';
+import { swaggerDocument } from './controller/swagger.controller';
 
 
 export const app = express();
@@ -16,6 +18,10 @@ app.use((req, res, next) => {
   next(); // Passe à la prochaine fonction middleware ou route
 });
 
+// Serveur Swagger UI à l'adresse /api-docs
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
+// Route du site
 app.use(pokemonRoutes());
 app.use(userRoutes());
 
