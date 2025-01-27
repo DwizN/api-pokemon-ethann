@@ -3,7 +3,7 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 async function main() {
-  await prisma.$executeRaw`DELETE FROM sqlite_sequence WHERE name = "Pokemon"`;
+  await prisma.$executeRaw`DELETE FROM sqlite_sequence WHERE name = "PokemonCard"`;
   await prisma.$executeRaw`DELETE FROM sqlite_sequence WHERE name = "Type"`;
 
   await prisma.pokemonCard.deleteMany();
