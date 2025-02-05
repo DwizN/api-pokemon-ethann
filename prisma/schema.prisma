@@ -11,18 +11,35 @@ model Type {
   id   Int    @id @default(autoincrement())
   name String @unique
 
-  Pokemon PokemonCard[] // Relation avec la table Pokémon
+  PokemonTypes PokemonCard[] @relation("PokemonTypes") // Relation avec la table Pokémon
+  PokemonAttacks PokemonAttack[] @relation("PokemonAttacks") // Relation avec la table PokémonAttack
+  PokemonWeaknesses PokemonCard[] @relation("PokemonWeaknesses") // Relation avec la table Pokémon
+}
+
+model PokemonAttack {
+  id Int @id @default(autoincrement()) // Identifiant unique de l'attaque
+  name String @unique // Nom de l'attaque
+  damages Int // Dégâts de l'attaque
+  type_id Type? @relation("PokemonAttacks", fields: [type_idid], references: [id]) // Type de l'attaque (relation 1-N)
+  type_idid Int? // Identifiant du type de l'attaque
+
+  PokemonCard PokemonCard[] // Pokémon possédant l'attaque (relation 1-N)
 }
 
 model PokemonCard {
   id Int @id @default(autoincrement()) // Identifiant unique de la carte
   name String @unique // Nom du Pokémon
   pokedexId Int @unique // Identifiant du pokémon dans le pokédex
-  typeIds Type[] // Type du Pokémon (relation 1-N)
+  typeIds Type[] @relation("PokemonTypes") // Type du Pokémon (relation 1-N)
   lifePoints Int // Points de vie
   size Float? // Taille
   weight Float? // Poids
   imageUrl String? // Url de l'image du Pokémon
+
+  weakness Type? @relation("PokemonWeaknesses", fields: [weaknessid], references: [id]) // Faiblesse du Pokémon (relation 1-N)
+  weaknessid Int? // Identifiant de la faiblesse du Pokémon
+
+  attack PokemonAttack[] // Attaques du Pokémon (relation 1-N)
 }
 
 model User {

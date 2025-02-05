@@ -3,7 +3,7 @@ import { serializePokemonCard, verifylifePoints, verifyPokemonCardbyId, verifyPo
 const prisma = new PrismaClient();
 
 export const getAllPokemonCards = async (_req: any, res: any) => {
-    const pokecard = await prisma.pokemonCard.findMany({ include: { typeIds: true } }); // Récupère tous les Pokémons et leurs type
+    const pokecard = await prisma.pokemonCard.findMany({ include: { typeIds: true, weakness: true } }); // Récupère tous les Pokémons et leurs type
     res.status(200).send(pokecard);
 }
 
@@ -28,7 +28,7 @@ export const getOnePokemonCard = async (req: any, res: any) => {
 
 
 export const createPokemonCard = async (req: any, res: any) => {
-     const { name, pokedexId, typeIds, lifePoints, size, weight, imageUrl } = req.body;
+     const { name, pokedexId, typeIds, lifePoints, size, weight, imageUrl, weaknessId } = req.body;
     
       // Batterie de tests pour voir si les champs sont bien remplis et si les données sont valides
       if (!name) {

@@ -54,6 +54,18 @@ export const verifyTypesId = async (req: Request, res: Response, next: NextFunct
             },
         },
     });
+
+    if (req.body.weaknessId) {
+        const validWeakness = await prisma.type.findUnique({
+            where: {
+                id: req.body.weaknessId,
+            },
+        });
+        if (!validWeakness) {
+            return res.status(400).send({ error: 'Erreur 400 Bad Request : Le type de faiblesse est invalide.' });
+        }
+    }
+
     if (validType.length !== req.body.typeIds.length) {
         return res.status(400).send({ error: 'Erreur 400 Bad Request : Un ou plusieurs types sont invalides.' });
     } else {
@@ -89,7 +101,7 @@ export const verifylifePoints = async (req: Request, res: Response, next: NextFu
 // Transforme la requete en objet pour la base de données
 
 export const serializePokemonCard = async (req: Request, res: Response, next: NextFunction) => {
-    const { name, pokedexId, typeIds, lifePoints, size, weight, imageUrl } = req.body;
+    const { name, pokedexId, typeIds, lifePoints, size, weight, imageUrl, weaknessId, attack } = req.body;
     const pokecard = {
         name,
         pokedexId,
@@ -99,7 +111,9 @@ export const serializePokemonCard = async (req: Request, res: Response, next: Ne
         lifePoints,
         size,
         weight,
-        imageUrl
+        imageUrl,
+        weaknessId: req.body.weaknessId ? { id: req.body.weaknessId } : undefined,
+        attack,
     };
     req.body = pokecard;
     next();

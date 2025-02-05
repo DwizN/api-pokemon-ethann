@@ -163,6 +163,20 @@ components:
           type: integer
         name:
           type: string
+    PokemonAttack:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        damages:
+          type: integer
+        type_id:
+          $ref: '#/components/schemas/Type'
+        type_id:
+          type: integer
+          $ref: '#/components/schemas/Type'
     PokemonCard:
       type: object
       properties:
@@ -186,6 +200,18 @@ components:
           format: float
         imageUrl:
           type: string
+        weakness:
+          type: Type
+          items:
+            $ref: '#/components/schemas/Type'
+        weaknessid:
+          type: integer
+          items:
+            $ref: '#/components/schemas/Type'
+        attack:
+          type: array
+          items:
+            $ref: '#/components/schemas/attack'
     User:
       type: object
       properties:
