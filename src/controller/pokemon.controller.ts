@@ -80,7 +80,6 @@ export const createPokemonCard = async (req: any, res: any) => {
       }
     
       try {
-        // Pass 'pokecard' object into query
         const createPokemon = await prisma.pokemonCard.create({ data: pokecard });
         res.status(201).send(`Ajout de la carte Pokémon ${createPokemon.name}`);
       } catch (error) {
