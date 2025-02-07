@@ -109,6 +109,110 @@ paths:
           description: Carte Pokémon non trouvée
         '500':
           description: Erreur serveur
+  /pokemon-attacks:
+    get:
+      summary: Obtenir la liste des attaques Pokémon
+      responses:
+        '200':
+          description: Liste des attaques Pokémon
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PokemonAttack'
+  /pokemon-attacks/{id}:
+    get:
+      summary: Obtenir une attaque Pokémon
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID de l'attaque Pokémon
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Attaque Pokémon
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PokemonAttack'
+        '404':
+          description: Attaque Pokémon non trouvée
+        '500':
+          description: Erreur serveur
+  /pokemon-attacks:
+    post:
+      summary: Ajouter une attaque Pokémon (requiert un token)
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PokemonAttack'
+      responses:
+        '201':
+          description: Attaque Pokémon ajoutée
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PokemonAttack'
+        '400':
+          description: Requête invalide
+        '500':
+          description: Erreur serveur
+  /pokemon-attacks/{id}:
+    patch:
+      summary: Modifier une attaque Pokémon (requiert un token)
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID de l'attaque Pokémon
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PokemonAttack'
+      responses:
+        '200':
+          description: Attaque Pokémon modifiée
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PokemonAttack'
+        '400':
+          description: Requête invalide
+        '404':
+          description: Attaque Pokémon non trouvée
+        '500':
+          description: Erreur serveur
+    delete:
+      summary: Supprimer une attaque Pokémon (requiert un token)
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID de l'attaque Pokémon
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Attaque Pokémon supprimée
+        '404':
+          description: Attaque Pokémon non trouvée
+        '500':
+          description: Erreur serveur
   /users:
     post:
       summary: Créer un utilisateur

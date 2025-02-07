@@ -3,6 +3,7 @@ import swaggerUi from 'swagger-ui-express';
 import { pokemonRoutes } from './route/pokemon.route';
 import { userRoutes } from './route/user.route';
 import { swaggerDocument } from './controller/swagger.controller';
+import { attackRoutes } from './route/attack.route';
 
 
 export const app = express();
@@ -24,6 +25,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 // Route du site
 app.use(pokemonRoutes());
 app.use(userRoutes());
+app.use(attackRoutes());
 
 
 
