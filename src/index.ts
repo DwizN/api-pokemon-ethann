@@ -4,6 +4,7 @@ import { pokemonRoutes } from './route/pokemon.route';
 import { userRoutes } from './route/user.route';
 import { swaggerDocument } from './controller/swagger.controller';
 import { attackRoutes } from './route/attack.route';
+import { deckRoutes } from './route/deck.route';
 
 
 export const app = express();
@@ -26,6 +27,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use(pokemonRoutes());
 app.use(userRoutes());
 app.use(attackRoutes());
+app.use(deckRoutes());
 
 
 

@@ -213,6 +213,170 @@ paths:
           description: Attaque Pokémon non trouvée
         '500':
           description: Erreur serveur
+  /decks:
+    get:
+      summary: Obtenir la liste des decks
+      responses:
+        '200':
+          description: Liste des decks
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Deck'
+  /decks/{id}:
+    get:
+      summary: Obtenir un deck
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID du deck
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Deck
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Deck'
+        '404':
+          description: Deck non trouvé
+        '500':
+          description: Erreur serveur
+  /decks:
+    post:
+      summary: Ajouter un deck (requiert un token)
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Deck'
+      responses:
+        '201':
+          description: Deck ajouté
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Deck'
+        '400':
+          description: Requête invalide
+        '500':
+          description: Erreur serveur
+  /decks/{id}:
+    patch:
+      summary: Modifier un deck (requiert un token)
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID du deck
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Deck'
+      responses:
+        '200':
+          description: Deck modifié
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Deck'
+        '400':
+          description: Requête invalide
+        '404':
+          description: Deck non trouvé
+        '500':
+          description: Erreur serveur
+    delete:
+      summary: Supprimer un deck (requiert un token)
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID du deck
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Deck supprimé
+        '404':
+          description: Deck non trouvé
+        '500':
+          description: Erreur serveur
+  /decks/{id}/add-card:
+    post:
+      summary: Ajouter une carte à un deck (requiert un token)
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID du deck
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                cardId:
+                  type: integer
+      responses:
+        '201':
+          description: Carte ajoutée au deck
+        '400':
+          description: Requête invalide
+        '404':
+          description: Deck ou carte non trouvé
+        '500':
+          description: Erreur serveur
+  /decks/{id}/remove-card:
+    post:
+      summary: Retirer une carte d'un deck (requiert un token)
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID du deck
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                cardId:
+                  type: integer
+      responses:
+        '204':
+          description: Carte retirée du deck
+        '400':
+          description: Requête invalide
+        '404':
+          description: Deck ou carte non trouvé
+        '500':
+          description: Erreur serveur
   /users:
     post:
       summary: Créer un utilisateur
@@ -316,6 +480,21 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/attack'
+    Deck:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        ownerId:
+          type: integer
+        owner:
+          $ref: '#/components/schemas/User'
+        cards:
+          type: array
+          items:
+            $ref: '#/components/schemas/PokemonCard'
     User:
       type: object
       properties:

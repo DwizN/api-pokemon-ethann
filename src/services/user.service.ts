@@ -21,10 +21,10 @@ export const verifyJWT = (req: Request, res: Response, next: NextFunction) => {
       };
       next();
     } catch (err) {
-      res.sendStatus(403); // Token invalide
+      res.status(403).send({ error: 'Erreur 403 : Token invalide' });
     }
   } else {
-    res.sendStatus(401); // Pas de token fourni
+    res.status(401).send({ error: 'Erreur 401 : Token manquant' });
   }
 };
 
@@ -56,7 +56,7 @@ export const verifyexistingUserReturn = async(req: Request, res: Response, next:
   if (existingUser) {
     return existingUser;
   } else { 
-    return res.status(400).send({ error: 'Erreur 404 : Utilisateur introuvable' });
+    return res.status(404).send({ error: 'Erreur 404 : Utilisateur introuvable' });
   }
 }
 
@@ -82,3 +82,31 @@ export const transformUserData = async(req : Request, hashedPassword: any) => {
   };
   return user;
 }
+
+// Récupère l'utilisateur connecté via JWT et renvoie son ID 
+export const getUserID = async(req: Request, res: Response) => {
+  const authHeader = req.headers.authorization;
+  if (authHeader) {
+  const token = authHeader.split(' ')[1]; // On récupère le token
+  const decodedToken = jwt.verify(
+    token,
+    process.env.JWT_SECRET as jwt.Secret
+  ) as {
+    email: string;
+  };
+  const email = decodedToken.email;
+  const user = await prisma.user.findUnique({
+    where: {
+      email: email,
+    },
+    select: {
+      id: true,
+    },
+  });
+  if (user) {
+   return user.id;
+  }
+} else {
+  return res.status(401).send({ error: 'Erreur 401 : Token manquant' });
+  }
+};
