@@ -50,7 +50,7 @@ export const loginUser = async (req: any, res: any) => {
   }
 
   const existingUser = await verifyexistingUserReturn(req, res, () => {}); // On vérifie si l'utilisateur existe
-  if (res.statusCode === 400) {
+  if (res.statusCode === 404) {
     return res;
   }
 
@@ -90,7 +90,7 @@ export const updateUser = async (req: any, res: any) => {
   }
 
   const existingUser = await verifyexistingUserReturn(olddata, res, () => {}); // On vérifie si l'utilisateur existe
-  if (res.statusCode === 400) {
+  if (res.statusCode === 404) {
     return res;
   }
 
@@ -133,7 +133,7 @@ export const deleteUser = async (req: any, res: any) => {
   }
 
   const existingUser = await verifyexistingUserReturn(req, res, () => {}); // On vérifie si l'utilisateur existe
-  if (res.statusCode === 400) {
+  if (res.statusCode === 404) {
     return res;
   }
 

@@ -33,7 +33,7 @@ export const verifyDamages = async (req: Request, res: Response, next: NextFunct
 export const verifyTypes_Id = async (req: Request, res: Response, next: NextFunction) => {
     const validType = await prisma.type.findMany({
         where: {
-            id: req.body.type_id,
+            id: req.body.type_idid,
         },
     });
     if (!validType) {
@@ -47,11 +47,11 @@ export const verifyTypes_Id = async (req: Request, res: Response, next: NextFunc
 // Transforme la requete en objet pour la base de données
 
 export const serializePokemonAttack = async (req: Request, next: NextFunction) => {
-    const { name, damages, type_id } = req.body;
+    const { name, damages, type_idid } = req.body;
     const pokeattack = {
         name,
         damages,
-        type_id,
+        type_idid,
     };
     req.body = pokeattack;
     next();

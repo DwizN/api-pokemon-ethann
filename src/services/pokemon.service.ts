@@ -55,10 +55,10 @@ export const verifyTypesId = async (req: Request, res: Response, next: NextFunct
         },
     });
 
-    if (req.body.weaknessId) {
+    if (req.body.weaknessid) {
         const validWeakness = await prisma.type.findUnique({
             where: {
-                id: req.body.weaknessId,
+                id: req.body.weaknessid,
             },
         });
         if (!validWeakness) {
@@ -101,7 +101,7 @@ export const verifylifePoints = async (req: Request, res: Response, next: NextFu
 // Transforme la requete en objet pour la base de données
 
 export const serializePokemonCard = async (req: Request, res: Response, next: NextFunction) => {
-    const { name, pokedexId, typeIds, lifePoints, size, weight, imageUrl, weaknessId, attack } = req.body;
+    const { name, pokedexId, typeIds, lifePoints, size, weight, imageUrl, weaknessid, attack } = req.body;
     const pokecard = {
         name,
         pokedexId,
@@ -112,7 +112,7 @@ export const serializePokemonCard = async (req: Request, res: Response, next: Ne
         size,
         weight,
         imageUrl,
-        weaknessId: req.body.weaknessId ? { id: req.body.weaknessId } : undefined,
+        weaknessid: req.body.weaknessid ? { id: req.body.weaknessid } : undefined,
         attack,
     };
     req.body = pokecard;

@@ -28,7 +28,7 @@ export const getOnePokemonCard = async (req: any, res: any) => {
 
 
 export const createPokemonCard = async (req: any, res: any) => {
-     const { name, pokedexId, typeIds, lifePoints, size, weight, imageUrl, weaknessId } = req.body;
+     const { name, pokedexId, typeIds, lifePoints, size, weight, imageUrl, weaknessid } = req.body;
     
       // Batterie de tests pour voir si les champs sont bien remplis et si les données sont valides
       if (!name) {

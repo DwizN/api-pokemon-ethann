@@ -4,8 +4,8 @@ import { verifyJWT } from '../services/user.service';
 
 const deckRouter = Router();
 
-deckRouter.get('/decks', verifyJWT, getAllDecks);
-deckRouter.get('/decks/:deckId', verifyJWT, getOneDeck);
+deckRouter.get('/decks', getAllDecks);
+deckRouter.get('/decks/:deckId', getOneDeck);
 deckRouter.post('/decks', verifyJWT, createDeck);
 deckRouter.patch('/decks/:deckId', verifyJWT, updateDeck);
 deckRouter.delete('/decks/:deckId', verifyJWT, deleteDeck);

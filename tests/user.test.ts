@@ -6,7 +6,7 @@ describe('User API', () => {
   describe('POST /users', () => {
     it('should create a new user', async () => {
       const createdUser = {email: 'jest@test.com', password: 'test1234'};
-      const mockUser = {id: 999, email: createdUser.email, password: createdUser.password};
+      const mockUser = {id: 199, email: createdUser.email, password: createdUser.password};
 
       prismaMock.user.create.mockResolvedValue(mockUser);
 
@@ -18,7 +18,7 @@ describe('User API', () => {
 
   describe('POST /users/login', () => {
     it('should login a user and return a token', async () => {
-      const user = {email: 'test@test.com', password: 'test1234'};
+      const user = {email: 'test@test.com', password: 'test'};
       const token = 'mockedToken';
 
       prismaMock.user.findFirst.mockResolvedValue({id: 1, email: user.email, password: user.password});

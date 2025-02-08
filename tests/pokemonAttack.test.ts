@@ -1,9 +1,7 @@
 import request from 'supertest';
 import { app, stopServer } from '../src';
 import { prismaMock } from './jest.setup';
-import jwt from 'jsonwebtoken';
-import prisma from '../src/client';
-import { response } from 'express';
+
 
 afterAll(() => {
   stopServer();
@@ -16,21 +14,21 @@ describe('PokemonAttack API', () => {
                 {
                     id: 1,
                     name: 'Charge',
-                    damage: 40,
+                    damages: 40,
                     type_id: { id: 1, name: 'Normal' }, // A vérifier
                     type_idid: 1,
                 },
                 {
                     id: 2,
                     name: 'Flammèche',
-                    damage: 30,
+                    damages: 30,
                     type_id: { id: 2, name: 'Fire' }, // A vérifier
                     type_idid: 2,
                 },
                 {
                     id: 3,
                     name: 'Pistolet à O',
-                    damage: 30,
+                    damages: 30,
                     type_id : { id: 3, name: 'Water' }, // A vérifier
                     type_idid: 3,
                 }
@@ -48,7 +46,7 @@ describe('PokemonAttack API', () => {
             const mockPokemonAttack = {
                 id: 1,
                 name: 'Charge',
-                damage: 40,
+                damages: 40,
                 type_id: { id: 1, name: 'Normal' }, // A vérifier
                 type_idid: 1,
             };
@@ -62,8 +60,8 @@ describe('PokemonAttack API', () => {
     });
     describe('POST /pokemon-attacks', () => {
         it('should create a new PokemonAttack', async () => {
-            const createdPokemonAttack = { name: 'Charge', damage: 40, type_id: { id: 1, name: 'Normal' }, type_idid: 1 };
-            const mockPokemonAttack = { id: 1, name: createdPokemonAttack.name, damage: createdPokemonAttack.damage, type_id: createdPokemonAttack.type_id, type_idid: createdPokemonAttack.type_idid };
+            const createdPokemonAttack = { name: 'Charge', damages: 40, type_id: { id: 1, name: 'Normal' }, type_idid: 1 };
+            const mockPokemonAttack = { id: 1, name: createdPokemonAttack.name, damages: createdPokemonAttack.damages, type_id: createdPokemonAttack.type_id, type_idid: createdPokemonAttack.type_idid };
 
             prismaMock.pokemonAttack.create.mockResolvedValue(mockPokemonAttack);
 
@@ -74,8 +72,8 @@ describe('PokemonAttack API', () => {
     });
     describe('PUT /pokemon-attacks/:pokemonAttackId', () => {
         it('should update a PokemonAttack', async () => {
-            const updatedPokemonAttack = { name: 'Charge', damage: 40, type_id: { id: 1, name: 'Normal' }, type_idid: 1 };
-            const mockPokemonAttack = { id: 1, name: updatedPokemonAttack.name, damage: updatedPokemonAttack.damage, type_id: updatedPokemonAttack.type_id, type_idid: updatedPokemonAttack.type_idid };
+            const updatedPokemonAttack = { name: 'Charge', damages: 40, type_id: { id: 1, name: 'Normal' }, type_idid: 1 };
+            const mockPokemonAttack = { id: 1, name: updatedPokemonAttack.name, damages: updatedPokemonAttack.damages, type_id: updatedPokemonAttack.type_id, type_idid: updatedPokemonAttack.type_idid };
 
             prismaMock.pokemonAttack.update.mockResolvedValue(mockPokemonAttack);
 
@@ -86,7 +84,7 @@ describe('PokemonAttack API', () => {
     });
     describe('DELETE /pokemon-attacks/:pokemonAttackId', () => {
         it('should delete a PokemonAttack', async () => {
-            const mockPokemonAttack = { id: 1, name: 'Charge', damage: 40, type_id: { id: 1, name: 'Normal' }, type_idid: 1 };
+            const mockPokemonAttack = { id: 1, name: 'Charge', damages: 40, type_id: { id: 1, name: 'Normal' }, type_idid: 1 };
 
             prismaMock.pokemonAttack.delete.mockResolvedValue(mockPokemonAttack);
 

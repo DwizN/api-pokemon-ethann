@@ -13,7 +13,8 @@ export const getAllPokemonAttacks = async (_req: any, res: any) => {
 // Renvoie une attaque de Pokémon
 export const getOnePokemonAttack = async (req: any, res: any) => {
     try {
-        await verifyPokemonAttackbyId(req.params.pokemonAttackId, res, () => {}); // On vérifie si l'attaque existe
+        const attackId = parseInt(req.params.pokemonAttackId);
+        await verifyPokemonAttackbyId(attackId, res, () => {}); // On vérifie si l'attaque existe
         if (res.statusCode === 404) {
           return res;
         } else {
@@ -32,7 +33,7 @@ export const getOnePokemonAttack = async (req: any, res: any) => {
 
 // Crée une attaque de Pokémon
 export const createPokemonAttack = async (req: any, res: any) => {
-    const { name, damages, type_id } = req.body;
+    const { name, damages, type_idid } = req.body;
 
     if (!name) {
         return res.status(400).send({ error: 'Erreur 400 Bad Request :  Le champ name est requis.' });
@@ -46,8 +47,8 @@ export const createPokemonAttack = async (req: any, res: any) => {
         return res.status(400).send({ error: 'Erreur 400 Bad Request :  Le champ damages doit être positif.' });
     }
 
-    if (!type_id) {
-        return res.status(400).send({ error: 'Erreur 400 Bad Request :  Le champ type_id est requis.' });
+    if (!type_idid) {
+        return res.status(400).send({ error: 'Erreur 400 Bad Request :  Le champ type_idid est requis.' });
     }
 
     await verifyTypes_Id(req, res, () => {}); // On vérifie si le type existe
