@@ -60,6 +60,7 @@ export const createDeck = async (req: any, res: any) => {
             },
         },
     });
+    res.status(200).send(`Deck ${deck.name} créé avec succès`);
 }
 
 export const updateDeck = async (req: any, res: any) => {
@@ -94,7 +95,7 @@ export const updateDeck = async (req: any, res: any) => {
             },
         },
     });
-    res.status(200).send(deck);
+    res.status(200).send(`Deck ${deck.name} mis à jour avec succès`);
 }
 
 export const deleteDeck = async (req: any, res: any) => {
@@ -108,7 +109,7 @@ export const deleteDeck = async (req: any, res: any) => {
             id: parseInt(req.params.deckId),
         },
     });
-    res.status(204).send();
+    res.status(200).send(`Deck supprimé avec succès`);
 }
 
 export const addCardToDeck = async (req: any, res: any) => {
@@ -134,7 +135,7 @@ export const addCardToDeck = async (req: any, res: any) => {
             },
         },
     });
-    res.status(200).send(deck);
+    res.status(200).send(`Carte ${cardId} ajoutée au deck ${deck.name} avec succès`);
 }
 
 export const removeCardFromDeck = async (req: any, res: any) => {
@@ -160,5 +161,5 @@ export const removeCardFromDeck = async (req: any, res: any) => {
             },
         },
     });
-    res.status(200).send(deck);
+    res.status(200).send(`Carte ${cardId} retirée du deck ${deck.name} avec succès`);
 }

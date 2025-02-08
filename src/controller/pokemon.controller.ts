@@ -37,8 +37,6 @@ export const createPokemonCard = async (req: any, res: any) => {
       await verifyPokemonCardbyName(req, res, () => {}); // On vérifie si le Pokémon existe
       if (res.statusCode === 400) {
         return res;
-      } else {
-        res.status(200).send(req.pokemonCard);
       }
 
       if (!pokedexId) {
@@ -48,8 +46,6 @@ export const createPokemonCard = async (req: any, res: any) => {
       await verifyPokemonCardbyPokedex(req, res, () => {}); // On vérifie si le Pokémon existe 
       if (res.statusCode === 400) {
         return res;
-      } else {
-        res.status(200).send(req.pokemonCard);
       }
 
       if (!typeIds) {
@@ -59,8 +55,6 @@ export const createPokemonCard = async (req: any, res: any) => {
       await verifyTypesId(req, res, () => {}); // On vérifie si le type existe
       if (res.statusCode === 400) {
         return res;
-      } else {
-        res.status(200).send(req.pokemonCard);
       }
 
       if (!lifePoints) {
@@ -70,8 +64,6 @@ export const createPokemonCard = async (req: any, res: any) => {
       await verifylifePoints(req, res, () => {}); // On vérifie si le Pokémon existe
       if (res.statusCode === 400) {
         return res;
-      } else {
-        res.status(200).send(req.pokemonCard);
       }
     
       const pokecard = await serializePokemonCard(req, res, () => {});
@@ -142,7 +134,7 @@ export const deletePokemonCard = async (req: any, res: any) => {
           },
         });
     
-        res.send(`Supression du Pokémon ${req.params.pokemonCardId}`);
+        res.status(200).send(`Supression du Pokémon ${req.params.pokemonCardId}`);
       } catch (error) {
         console.error(error);
         return res.status(500).send({ error: 'Erreur 500 : Une erreur interne s"est produite.' });

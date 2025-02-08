@@ -124,7 +124,7 @@ describe('PokemonCard API', () => {
 
       const response = await request(app).patch('/pokemon-cards/1').send(updatedPokemonCard);
       expect(response.status).toBe(200);
-      expect(response.body).toEqual(updatedPokemonCard);
+      expect(response.body).toEqual(`Mise à jour du Pokémon ${updatedPokemonCard.name} effectuée`);
     });
   });
 

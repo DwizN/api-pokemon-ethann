@@ -65,7 +65,7 @@ export const createPokemonAttack = async (req: any, res: any) => {
         const newPokemonAttack = await prisma.pokemonAttack.create({
             data: pokeattack,
         });
-        return res.status(201).send(newPokemonAttack);
+        return res.status(200).send(`L"attaque ${newPokemonAttack.name} a bien été créée.`);
     } catch (error) {
         console.error(error);
         return res.status(500).send({ error: 'Erreur 500 : Une erreur interne s"est produite.' });
@@ -97,7 +97,7 @@ export const updatePokemonAttack = async (req: any, res: any) => {
             },
             data: pokeattack,
         });
-        return res.status(200).send(updatedPokemonAttack);
+        return res.status(200).send(`L"attaque ${updatedPokemonAttack.name} a bien été modifiée.`);
     } catch (error) {
         console.error(error);
         return res.status(500).send({ error: 'Erreur 500 : Une erreur interne s"est produite.' });
@@ -116,7 +116,7 @@ export const deletePokemonAttack = async (req: any, res: any) => {
                 id: parseInt(req.params.pokemonAttackId),
             },
         });
-        return res.status(204).send();
+        return res.status(200).send(`L"attaque a bien été supprimée.`);
     } catch (error) {
         console.error(error);
         return res.status(500).send({ error: 'Erreur 500 : Une erreur interne s"est produite.' });

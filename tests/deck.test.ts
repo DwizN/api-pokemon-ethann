@@ -119,7 +119,7 @@ describe('Deck API', () => {
                 .post('/decks')
                 .send(createdDeck);
             expect(response.status).toBe(200);
-            expect(response.body).toEqual(createdDeck);
+            expect(response.body).toEqual(`Deck ${createdDeck.name} créé avec succès`);
         });
     });
     describe('PUT /decks/:deckId', () => {
@@ -141,7 +141,7 @@ describe('Deck API', () => {
                 .put('/decks/1')
                 .send(updatedDeck);
             expect(response.status).toBe(200);
-            expect(response.body).toEqual(updatedDeck);
+            expect(response.body).toEqual(`Deck ${updatedDeck.name} modifié avec succès`);
 
         });
     });
@@ -162,7 +162,7 @@ describe('Deck API', () => {
 
             const response = await request(app).delete('/decks/1');
             expect(response.status).toBe(200);
-            expect(response.body).toEqual(mockDeck);
+            expect(response.body).toEqual(`Deck ${mockDeck.name} supprimé avec succès`);
         });
     });
     describe('PATCH /decks/:deckId/add-card', () => {
@@ -186,7 +186,7 @@ describe('Deck API', () => {
                 .send({ cardId: 3 });
 
             expect(response.status).toBe(200);
-            expect(response.body).toEqual(updatedDeck);
+            expect(response.body).toEqual(`Carte ${3} ajoutée au deck ${updatedDeck.name} avec succès`);
         });
     });
     describe('PATCH /decks/:deckId/remove-card', () => {
@@ -208,7 +208,7 @@ describe('Deck API', () => {
                 .send({ cardId: 2 });
 
             expect(response.status).toBe(200);
-            expect(response.body).toEqual(updatedDeck);
+            expect(response.body).toEqual(`Carte ${2} retirée du deck ${updatedDeck.name} avec succès`);
 
         });
 });
