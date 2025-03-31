@@ -3,17 +3,16 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 async function main() {
-  await prisma.$executeRaw`ALTER SEQUENCE "PokemonAttack_id_seq" RESTART WITH 1`;
+  /*await prisma.$executeRaw`ALTER SEQUENCE "PokemonAttack_id_seq" RESTART WITH 1`;
   await prisma.$executeRaw`ALTER SEQUENCE "Deck_id_seq" RESTART WITH 1`;
   await prisma.$executeRaw`ALTER SEQUENCE "PokemonCard_id_seq" RESTART WITH 1`;
   await prisma.$executeRaw`ALTER SEQUENCE "Type_id_seq" RESTART WITH 1`;
   await prisma.$executeRaw`ALTER SEQUENCE "User_id_seq" RESTART WITH 1`;
-
   await prisma.pokemonAttack.deleteMany();
   await prisma.pokemonCard.deleteMany();
   await prisma.type.deleteMany();
   await prisma.deck.deleteMany();
-  await prisma.user.deleteMany();
+  await prisma.user.deleteMany();*/
   
   await prisma.type.createMany({
     data: [
